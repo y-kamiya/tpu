@@ -55,7 +55,7 @@ from absl import app
 from absl import flags
 import tensorflow as tf
 
-from google.cloud import storage
+# from google.cloud import storage
 
 flags.DEFINE_string(
     'project', None, 'Google cloud project id for uploading the dataset.')
@@ -372,7 +372,7 @@ def convert_to_tf_records(raw_data_dir):
 
   # Glob all the training files
   training_files = tf.gfile.Glob(
-      os.path.join(raw_data_dir, TRAINING_DIRECTORY, '*', '*.JPEG'))
+      os.path.join(raw_data_dir, TRAINING_DIRECTORY, '*', '*.jpg'))
 
   # Get training file synset labels from the directory name
   training_synsets = [
@@ -384,7 +384,7 @@ def convert_to_tf_records(raw_data_dir):
 
   # Glob all the validation files
   validation_files = sorted(tf.gfile.Glob(
-      os.path.join(raw_data_dir, VALIDATION_DIRECTORY, '*.JPEG')))
+      os.path.join(raw_data_dir, VALIDATION_DIRECTORY, '*.jpg')))
 
   # Get validation file synset labels from labels.txt
   validation_synsets = tf.gfile.FastGFile(
