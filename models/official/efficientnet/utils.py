@@ -278,6 +278,24 @@ class EvalCkptDriver(object):
   def get_preprocess_fn(self):
     raise ValueError('Must be implemented by subclsses.')
 
+  def build_dataset_eval(self, filenames):
+    dataset = tf.data.Dataset.from_tensor_slices(filenames)
+
+    def _parse_function(filename):
+      image_string = tf.read_file(filename)
+      preprocess_fn = self.get_preprocess_fn()
+      image_decoded = preprocess_fn(
+          image_string, False, image_size=self.image_size)
+      image = tf.cast(image_decoded, tf.float32)
+      return image
+
+    dataset = dataset.map(_parse_function)
+    dataset = dataset.batch(1)
+
+    iterator = dataset.make_initializable_iterator()
+    images = iterator.get_next()
+    return images, iterator
+
   def build_dataset(self, filenames, labels, is_training):
     """Build input dataset."""
     batch_drop_remainder = False
