@@ -8,6 +8,7 @@ import tensorflow.compat.v1 as tf
 from absl import app
 from absl import flags
 FLAGS = flags.FLAGS
+flags.DEFINE_string('host', default='127.0.0.1', help='')
 flags.DEFINE_integer('port', default=5000, help='')
 
 from flask import Flask, request, jsonify, make_response
@@ -63,7 +64,7 @@ def main(unused_argv):
       probs = probs[0]
     eval_driver.restore_model(sess, model_dir, True, False)
 
-    flask.run(host="127.0.0.1", port=FLAGS.port)
+    flask.run(host=FLAGS.host, port=FLAGS.port)
 
 
 if __name__ == '__main__':
