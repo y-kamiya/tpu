@@ -2,6 +2,7 @@
 
 INPUT_DIR=$1
 DATASET_NAME=${2:-dataset}
+COUNT=${3:-3000}
 
 if [ ${INPUT_DIR:-UNDEF} == 'UNDEF' ]; then
     echo "usage: $0 <input directory> (<dataset name>)"
@@ -59,20 +60,20 @@ cat $WORKING_DIR/classnumlist | awk '{print $2}' > $WORKING_DIR/classlist
 cat $WORKING_DIR/classnumlist | awk '$1 < 60 {print $2}' > $WORKING_DIR/classlist_low
 
 echo 'extract images for augmentation'
-$copy_images $WORKING_DIR/classlist $INPUT_DIR ${DATASET_DIR}_aug 250
+$copy_images $WORKING_DIR/classlist $INPUT_DIR ${DATASET_DIR}_aug $((COUNT/12))
 
 echo 'execute augmentation'
 python $preprocess --augmentation resize --target_label $WORKING_DIR/classlist ${DATASET_DIR}_aug
-
 python $preprocess --augmentation gamma --target_label $WORKING_DIR/classlist_low ${DATASET_DIR}_aug
 python $preprocess --augmentation gamma --target_label $WORKING_DIR/classlist_low $WORKING_DIR/aug_resize
 
 echo 'create dataset'
-$copy_images $WORKING_DIR/classlist $INPUT_DIR/raw $DATASET_DIR 500
-$copy_images $WORKING_DIR/classlist $INPUT_DIR/wide $DATASET_DIR 500
-$copy_images $WORKING_DIR/classlist $INPUT_DIR/crop $DATASET_DIR 500
-$copy_images $WORKING_DIR/classlist $WORKING_DIR/aug_resize $DATASET_DIR 1000
-$copy_images $WORKING_DIR/classlist $WORKING_DIR/aug_gamma $DATASET_DIR 1000
+$copy_images $WORKING_DIR/classlist $INPUT_DIR/raw $DATASET_DIR $((COUNT/6))
+$copy_images $WORKING_DIR/classlist $INPUT_DIR/wide $DATASET_DIR $((COUNT/6))
+$copy_images $WORKING_DIR/classlist $INPUT_DIR/crop $DATASET_DIR $((COUNT/6))
+$copy_images $WORKING_DIR/classlist $INPUT_DIR/additional $DATASET_DIR $((COUNT/6))
+$copy_images $WORKING_DIR/classlist $WORKING_DIR/aug_resize $DATASET_DIR $((COUNT/3))
+$copy_images $WORKING_DIR/classlist $WORKING_DIR/aug_gamma $DATASET_DIR $((COUNT/3))
 
 echo 'remove broken images'
 python $preprocess --check_jpg $DATASET_DIR | grep -v Namespace | xargs rm -f
