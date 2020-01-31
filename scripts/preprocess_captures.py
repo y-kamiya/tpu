@@ -129,6 +129,9 @@ def extract_node_image():
             h = int(entry[4])
             label = entry[5].split('@')[0]
 
+            if w <= 15 or h <= 15:
+                continue
+
             height, width, _ = image.shape
             cv_y = height - y
             save_image(image[cv_y-h:cv_y, x:x+w], label, 'raw', dest_dir)
