@@ -134,7 +134,9 @@ def extract_node_image():
 
             height, width, _ = image.shape
             cv_y = height - y
-            save_image(image[cv_y-h:cv_y, x:x+w], label, 'raw', dest_dir)
+            y = max(0, cv_y - h)
+
+            save_image(image[y:y+h, x:x+w], label, 'raw', dest_dir)
             if h < 720 and w < 1280:
                 # 20%外側も含める
                 _h = int(h * 0.2)
@@ -146,21 +148,21 @@ def extract_node_image():
                 save_image(image[y_from:y_to, x_from:x_to], label, 'wide', dest_dir)
             if 800 < w:
                 # 横に半分
-                save_image(image[cv_y-h:cv_y, x:x+w//2], label, 'crop', dest_dir)
-                save_image(image[cv_y-h:cv_y, x+w//2:x+w], label, 'crop', dest_dir)
+                save_image(image[y:y+h, x:x+w//2], label, 'crop', dest_dir)
+                save_image(image[y:y+h, x+w//2:x+w], label, 'crop', dest_dir)
             if 600 < h:
                 # 縦に半分
-                save_image(image[cv_y-h:cv_y-h//2, x:x+w], label, 'crop', dest_dir)
-                save_image(image[cv_y-h//2:cv_y-h, x:x+w], label, 'crop', dest_dir)
+                save_image(image[y:y+h//2, x:x+w], label, 'crop', dest_dir)
+                save_image(image[y+h//2:y+h, x:x+w], label, 'crop', dest_dir)
             if 800 < w and 600 < h:
                 # 中央
-                save_image(image[cv_y-h*3//4:cv_y-h//4, x+w//4:x+w*3//4], label, 'crop', dest_dir)
+                save_image(image[y+h//4:y+h*3//4, x+w//4:x+w*3//4], label, 'crop', dest_dir)
             if 1280 <= w and 720 <= w:
                 # 全画面の場合は４分割も
-                save_image(image[cv_y-h:cv_y-h//2, x:x+w//2], label, 'crop', dest_dir)
-                save_image(image[cv_y-h:cv_y-h//2, x+w//2:x+w], label, 'crop', dest_dir)
-                save_image(image[cv_y-h//2:cv_y, x:x+w//2], label, 'crop', dest_dir)
-                save_image(image[cv_y-h//2:cv_y, x+w//2:x+w], label, 'crop', dest_dir)
+                save_image(image[y:y+h//2, x:x+w//2], label, 'crop', dest_dir)
+                save_image(image[y:y+h//2, x+w//2:x+w], label, 'crop', dest_dir)
+                save_image(image[y+h//2:y+h, x:x+w//2], label, 'crop', dest_dir)
+                save_image(image[y+h//2:y+h, x+w//2:x+w], label, 'crop', dest_dir)
 
 def augmentation():
     assert args.target_label != None, "use --target_label to show class to apply augmentation"
