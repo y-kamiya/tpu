@@ -226,6 +226,10 @@ def augmentation_resize(src_dir, dest_dir, label):
             save_image(im, label, '', dest_dir)
 
 def save_image(image, label, type, dest_dir):
+    shape = image.shape
+    if len(shape) != 3 or shape[0] <= 0 or shape[1] <= 0:
+        return
+
     dest_dir = os.path.join(dest_dir, type, label)
 
     if not os.path.exists(dest_dir):
