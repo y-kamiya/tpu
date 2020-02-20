@@ -82,6 +82,7 @@ remove_invalid_images $DATASET_DIR
 echo 'separate validation data for efficientnet training'
 rm -rf $WORKING_DIR/dataset_imagenet
 python $preprocess --convert_imagenet --dest_dir $DATASET_DIR --validation_ratio 0.1 $DATASET_DIR
+python $preprocess --extract_label $DATASET_DIR/train | sort | uniq -c | sort -nr > $DATASET_DIR/classnumlist
 python $preprocess --extract_label $DATASET_DIR/train | sort | uniq > $DATASET_DIR/classlist
 python $preprocess --extract_label $DATASET_DIR/validation | sort > $DATASET_DIR/synset_labels.txt
 
