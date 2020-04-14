@@ -18,7 +18,6 @@ if [ $? -ne 0 ]; then
     pip2.7 install tensorflow==1.15.0
     python2.7 $ROOT_DIR/tools/datasets/imagenet_to_gcs.py  --raw_data_dir $DATASET_DIR --local_scratch_dir $output_dir --nogcs_upload
 fi
-exit
 
 gsutil -m cp -r $output_dir/train/train-*  gs://${PROJECT_ID}-vcm/$dataset_name/tf_records/
 gsutil -m cp -r $output_dir/validation/validation-*  gs://${PROJECT_ID}-vcm/$dataset_name/tf_records/
